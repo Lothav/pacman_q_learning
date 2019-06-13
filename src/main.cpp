@@ -2,36 +2,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
-
-std::vector<std::vector<char>> readTable(const std::string& path)
-{
-    std::ifstream f;
-    f.open(path);
-
-    std::vector<std::vector<char>> table = {};
-
-    if(f.is_open())
-    {
-        uint32_t w = 0, h = 0;
-        f >> h;
-        f >> w;
-        f.ignore();
-
-        table.resize(h);
-
-        for (int i = 0; i < h; ++i)
-        {
-            table[i].resize(w);
-            f.getline(table[i].data(), w + 1);
-        }
-    } else {
-        throw "Cannot open file!";
-    }
-
-    f.close();
-
-    return table;
-}
+#include "FieldFactory.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -41,11 +12,26 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    std::vector<std::vector<char>> table = readTable(argv[1]);
+    std::stringstream s;
+    uint32_t w = 0, h = 0;
+
+    {
+        std::ifstream f;
+        f.open(argv[1]);
+        if(!f.is_open()) throw "Cannot open file!";
+        f >> h;
+        f >> w;
+        f.ignore();
+
+        s << f.rdbuf();
+        f.close();
+    }
+
+    auto field = FieldFactory::create(std::move(s), w, h);
+
     double learning_rate = std::atof(argv[2]);
     double e_greedy      = std::atof(argv[3]);
     auto num_executions  = static_cast<uint32_t>(std::atoi(argv[4]));
-
 
     return EXIT_SUCCESS;
 }
