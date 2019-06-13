@@ -5,8 +5,18 @@
 
 int main(int argc, char* argv[])
 {
+    if(argc != 5) {
+        std::cerr << "Invalid number of arguments!" << std::endl;
+        std::cerr << "Arguments must be <input-file> <learning-rate> <e-greedy> <num-executions>" << std::endl;
+        return EXIT_FAILURE;
+    }
+
     std::ifstream f;
-    f.open("test.txt");
+    f.open(argv[1]);
+
+    double learning_rate = std::atof(argv[2]);
+    double e_greedy = std::atof(argv[3]);
+    auto num_executions = static_cast<uint32_t>(std::atoi(argv[4]));
 
     std::vector<std::vector<char>> table = {};
 
