@@ -3,20 +3,10 @@
 #include <fstream>
 #include <vector>
 
-int main(int argc, char* argv[])
+std::vector<std::vector<char>> readTable(const std::string& path)
 {
-    if(argc != 5) {
-        std::cerr << "Invalid number of arguments!" << std::endl;
-        std::cerr << "Arguments must be <input-file> <learning-rate> <e-greedy> <num-executions>" << std::endl;
-        return EXIT_FAILURE;
-    }
-
     std::ifstream f;
-    f.open(argv[1]);
-
-    double learning_rate = std::atof(argv[2]);
-    double e_greedy = std::atof(argv[3]);
-    auto num_executions = static_cast<uint32_t>(std::atoi(argv[4]));
+    f.open(path);
 
     std::vector<std::vector<char>> table = {};
 
@@ -39,6 +29,23 @@ int main(int argc, char* argv[])
     }
 
     f.close();
+
+    return table;
+}
+
+int main(int argc, char* argv[])
+{
+    if(argc != 5) {
+        std::cerr << "Invalid number of arguments!" << std::endl;
+        std::cerr << "Arguments must be <input-file> <learning-rate> <e-greedy> <num-executions>" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    std::vector<std::vector<char>> table = readTable(argv[1]);
+    double learning_rate = std::atof(argv[2]);
+    double e_greedy      = std::atof(argv[3]);
+    auto num_executions  = static_cast<uint32_t>(std::atoi(argv[4]));
+
 
     return EXIT_SUCCESS;
 }
