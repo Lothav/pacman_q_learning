@@ -2,8 +2,8 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
-#include "FieldFactory.hpp"
-#include "QLearning.hpp"
+#include "PacMaze/FieldFactory.hpp"
+#include "PacMaze/QLearning.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -32,13 +32,13 @@ int main(int argc, char* argv[])
         f.close();
     }
 
-    QLearningParams params = {
-        .field          = FieldFactory::create(std::move(s), w, h),
-        .learning_rate  = std::atof(argv[2]),
-        .e_greedy       = std::atof(argv[3]),
-        .num_executions = static_cast<uint32_t>(std::atoi(argv[4]))
-    };
+    auto params = std::make_unique<PacMaze::QLearningConfig>();
+    params->field          = PacMaze::FieldFactory::create(std::move(s), w, h);
+    params->learning_rate  = std::atof(argv[2]);
+    params->e_greedy       = std::atof(argv[3]);
+    params->num_executions = static_cast<uint32_t>(std::atoi(argv[4]));
 
+    auto ql = std::make_unique<PacMaze::QLearning>(std::move(params));
 
 
 
