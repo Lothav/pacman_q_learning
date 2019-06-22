@@ -19,10 +19,14 @@ int main(int argc, char* argv[])
         std::ifstream f;
         f.open(argv[1]);
         if(!f.is_open()) throw "Cannot open file!";
+
+        // Read field width and height
         f >> h;
         f >> w;
+        // ignore rest of the line
         f.ignore();
 
+        // Copy field data to a buffer and close input file
         s << f.rdbuf();
         f.close();
     }
