@@ -7,7 +7,7 @@ namespace PacMaze
         field_t table = {};
         table.resize(field_height);
 
-        reward_t rewards = {};
+        rewards_t rewards = {};
         rewards.resize(field_height);
 
         std::vector<char> line = {};
