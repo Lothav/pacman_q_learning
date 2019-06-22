@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include "FieldFactory.hpp"
+#include "QLearning.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -31,11 +32,15 @@ int main(int argc, char* argv[])
         f.close();
     }
 
-    auto field = FieldFactory::create(std::move(s), w, h);
+    QLearningParams params = {
+        .field          = FieldFactory::create(std::move(s), w, h),
+        .learning_rate  = std::atof(argv[2]),
+        .e_greedy       = std::atof(argv[3]),
+        .num_executions = static_cast<uint32_t>(std::atoi(argv[4]))
+    };
 
-    double learning_rate = std::atof(argv[2]);
-    double e_greedy      = std::atof(argv[3]);
-    auto num_executions  = static_cast<uint32_t>(std::atoi(argv[4]));
+
+
 
     return EXIT_SUCCESS;
 }

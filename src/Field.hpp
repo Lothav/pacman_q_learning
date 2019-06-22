@@ -13,13 +13,12 @@ enum field_cell_t
 };
 
 typedef std::vector<std::vector<field_cell_t>> field_t;
-typedef std::vector<std::vector<int32_t>> reward_t;
+typedef std::vector<std::vector<int32_t>>      reward_t;
 
 class Field
 {
-
 private:
-    field_t field_;
+    field_t  field_;
     reward_t rewards_;
 
 public:
