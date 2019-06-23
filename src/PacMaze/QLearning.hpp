@@ -62,7 +62,7 @@ namespace PacMaze
                     double old_q_val = config_->field->getQ(state, action);
 
                     auto new_q_val =
-                        old_q_val + config_->e_greedy * ((state_reward + config_->discount_factor * max_q_val) - old_q_val);
+                        old_q_val + config_->learning_rate * ((state_reward + config_->discount_factor * max_q_val) - old_q_val);
 
                     config_->field->updateQ(state, action, new_q_val);
 

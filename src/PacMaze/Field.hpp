@@ -35,7 +35,7 @@ namespace PacMaze
     const std::array<field_action, 4> field_action_list = { RIGHT, LEFT, UP, DOWN };
     static std::unordered_map<field_action, std::array<int, 2>> field_state_movement =
         {
-            {UP, {0, -1}}, {DOWN, {0, 1}}, {LEFT, {-1, 0}}, {RIGHT, {1, 0}}
+            {UP, {-1, 0}}, {DOWN, {1, 0}}, {LEFT, {0, -1}}, {RIGHT, {0, 1}}
         };
 
     class Field
@@ -99,41 +99,39 @@ namespace PacMaze
             Q_t q = field_[state[0]][state[1]].Q;
 
             for (auto& q_it : q) {
-                if(q_it .second > max_value){
+                if(q_it.second > max_value){
                     max_q_action = q_it.first;
                     max_value    = q_it.second;
                 }
             }
 
             if(max_value == INT32_MIN)
-                throw "Action error!";
+                throw "Invalid Q!";
 
             return {max_q_action, max_value};
         }
 
         void printQ()
         {
-            uint i = 0;
-            for (auto& line : field_)
+            for (uint i = 0; i < field_.size(); i++)
             {
-                uint j = 0;
-                for (auto& column : line)
+                for (uint j = 0; j < field_[i].size(); j++)
                 {
-                    uint  k = 0;
-                    for (auto& fal : field_action_list)
+                    auto field_cell = field_[i][j];
+                    if(field_cell.type == WALL) continue;
+
+                    for (uint k = 0; k < field_action_list.size(); k++)
                     {
                         std::ostringstream q_stream_format;
                         q_stream_format << std::fixed;
                         q_stream_format << std::setprecision(3);
-                        q_stream_format << column.Q[fal];
+                        q_stream_format << field_cell.Q[field_action_list[k]];
 
-                        auto prefix = std::array<char, 4>{'R', 'L', 'U', 'D'}[k++];
+                        auto prefix = std::array<char, 4>{'R', 'L', 'U', 'D'}[k];
                         std::cout << std::to_string(i) << ',' << std::to_string(j) << ',';
                         std::cout << prefix << ',' << q_stream_format.str() << std::endl;
                     }
-                    j++;
                 }
-                i++;
             }
         }
     };
