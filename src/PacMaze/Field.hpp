@@ -5,6 +5,9 @@
 #include <vector>
 #include <cstdint>
 #include <unordered_map>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
 
 namespace PacMaze
 {
@@ -29,11 +32,11 @@ namespace PacMaze
     typedef std::vector<std::vector<FieldCell>>   field_t;
     typedef std::array<uint32_t, 2>               state_t;
 
-    const std::array<field_action, 4> field_action_list = { UP, DOWN, LEFT, RIGHT };
+    const std::array<field_action, 4> field_action_list = { RIGHT, LEFT, UP, DOWN };
     static std::unordered_map<field_action, std::array<int, 2>> field_state_movement =
-    {
-        {UP, {0, -1}}, {DOWN, {0, 1}}, {LEFT, {-1, 0}}, {RIGHT, {1, 0}}
-    };
+        {
+            {UP, {0, -1}}, {DOWN, {0, 1}}, {LEFT, {-1, 0}}, {RIGHT, {1, 0}}
+        };
 
     class Field
     {
@@ -106,6 +109,32 @@ namespace PacMaze
                 throw "Action error!";
 
             return {max_q_action, max_value};
+        }
+
+        void printQ()
+        {
+            uint i = 0;
+            for (auto& line : field_)
+            {
+                uint j = 0;
+                for (auto& column : line)
+                {
+                    uint  k = 0;
+                    for (auto& fal : field_action_list)
+                    {
+                        std::ostringstream q_stream_format;
+                        q_stream_format << std::fixed;
+                        q_stream_format << std::setprecision(3);
+                        q_stream_format << column.Q[fal];
+
+                        auto prefix = std::array<char, 4>{'R', 'L', 'U', 'D'}[k++];
+                        std::cout << std::to_string(i) << ',' << std::to_string(j) << ',';
+                        std::cout << prefix << ',' << q_stream_format.str() << std::endl;
+                    }
+                    j++;
+                }
+                i++;
+            }
         }
     };
 }
