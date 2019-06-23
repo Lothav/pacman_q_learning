@@ -7,16 +7,12 @@ namespace PacMaze
         field_t table = {};
         table.resize(field_height);
 
-        rewards_t rewards = {};
-        rewards.resize(field_height);
-
         std::vector<char> line = {};
         line.resize(field_width);
 
         for (int i = 0; i < field_height; ++i)
         {
             table[i].resize(field_width);
-            rewards[i].resize(field_width);
 
             s.getline(line.data(), field_width + 1);
 
@@ -25,27 +21,32 @@ namespace PacMaze
                 switch (line[j])
                 {
                     case WALL:
-                        table[i][j] = WALL;
-                        rewards[i][j] = -1;
+                        table[i][j].type = WALL;
+                        table[i][j].R    = -1;
                         break;
                     case EMPTY_PATH:
-                        table[i][j] = EMPTY_PATH;
-                        rewards[i][j] = -1;
+                        table[i][j].type = EMPTY_PATH;
+                        table[i][j].R    = -1;
                         break;
                     case GHOST:
-                        table[i][j] = GHOST;
-                        rewards[i][j] = -10;
+                        table[i][j].type = GHOST;
+                        table[i][j].R    = -10;
                         break;
                     case PELLET:
-                        table[i][j] = PELLET;
-                        rewards[i][j] = 10;
+                        table[i][j].type = PELLET;
+                        table[i][j].R    = 10;
                         break;
                     default:
                         throw std::string("Unknown field cell: ") + line[j];
                 }
+
+                table[i][j].Q[UP]    = 0;
+                table[i][j].Q[DOWN]  = 0;
+                table[i][j].Q[LEFT]  = 0;
+                table[i][j].Q[RIGHT] = 0;
             }
         }
 
-        return std::make_unique<Field>(std::move(table), std::move(rewards));
+        return std::make_unique<Field>(std::move(table));
     }
 }

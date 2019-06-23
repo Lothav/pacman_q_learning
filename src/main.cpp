@@ -39,8 +39,7 @@ int main(int argc, char* argv[])
     params->num_executions = static_cast<uint32_t>(std::atoi(argv[4]));
 
     auto ql = std::make_unique<PacMaze::QLearning>(std::move(params));
-
-
+    ql->train();
 
     return EXIT_SUCCESS;
 }
