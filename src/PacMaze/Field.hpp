@@ -77,6 +77,12 @@ namespace PacMaze
             field_[state[0]][state[1]].Q[action] = new_val;
         }
 
+        bool isFinalState(const state_t& state) const
+        {
+            field_cell_type type = field_[state[0]][state[1]].type;
+            return type == PELLET || type == GHOST;
+        }
+
         int32_t getStateReward(const state_t& state)
         {
             return field_[state[0]][state[1]].R;

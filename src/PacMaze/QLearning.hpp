@@ -38,30 +38,39 @@ namespace PacMaze
 
         void train()
         {
-            state_t state = {1, 1};
             uint32_t num_executions = config_->num_executions;
 
             while(num_executions--)
             {
-                field_action action;
-                double rand = dist_r_0_to_1_(generator_);
-                if(rand < config_->e_greedy)
-                    // Random action.
-                    action = field_action_list[dist_ui_0_to_4_(generator_)];
-                else
-                    // Get action that maximize Q(s, a).
-                    action = config_->field->maxQ(state).first;
+                state_t state = {1, 1};
 
-                double old_q_val = config_->field->getQ(state, action);
-                state_t new_state = config_->field->getNewState(state, action);
-                double max_q_val = config_->field->maxQ(new_state).second;
+                while(true)
+                {
+                    field_action action;
+                    double rand = dist_r_0_to_1_(generator_);
+                    if(rand < config_->e_greedy)
+                        // Random action.
+                        action = field_action_list[dist_ui_0_to_4_(generator_)];
+                    else
+                        // Get action that maximize Q(s, a).
+                        action = config_->field->maxQ(state).first;
 
-                auto new_q_val =
-                    old_q_val +
-                    config_->e_greedy *
-                    ((config_->field->getStateReward(new_state) + config_->discount_factor * max_q_val) - old_q_val);
+                    state_t new_state = config_->field->getNewState(state, action);
+                    double max_q_val = config_->field->maxQ(new_state).second;
+                    int32_t state_reward = config_->field->getStateReward(new_state);
 
-                config_->field->updateQ(state, action, new_q_val);
+                    double old_q_val = config_->field->getQ(state, action);
+
+                    auto new_q_val =
+                        old_q_val + config_->e_greedy * ((state_reward + config_->discount_factor * max_q_val) - old_q_val);
+
+                    config_->field->updateQ(state, action, new_q_val);
+
+                    state = new_state;
+
+                    if(config_->field->isFinalState(state))
+                        break;
+                }
             }
         }
     };
