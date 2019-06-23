@@ -27,6 +27,7 @@ namespace PacMaze
     };
 
     typedef std::vector<std::vector<FieldCell>>   field_t;
+    typedef std::array<uint32_t, 2>               state_t;
 
     class Field
     {
@@ -37,7 +38,7 @@ namespace PacMaze
         explicit Field(field_t&& field) : field_(field)
         {}
 
-        bool isValidMove(std::array<int32_t, 2>&& new_state_pos) const
+        bool isValidMove(state_t&& new_state_pos) const
         {
             // Check lower boundaries.
             if(new_state_pos[0] < 0 || new_state_pos[1] < 0)
@@ -51,6 +52,26 @@ namespace PacMaze
 
             // Valid move!
             return true;
+        }
+
+        field_action argmaxQ(const state_t& state) const
+        {
+            field_action max_q_action = LEFT;
+
+            int32_t max_value = INT32_MIN;
+            auto state_q = field_[state[0]][state[1]].Q;
+
+            for (auto &it : state_q) {
+                if(it.second > max_value){
+                    max_value = it.second;
+                    max_q_action = it.first;
+                }
+            }
+
+            if(max_value == INT32_MIN)
+                throw "Action error!";
+
+            return max_q_action;
         }
     };
 }

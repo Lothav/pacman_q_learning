@@ -36,14 +36,18 @@ namespace PacMaze
 
         void train()
         {
-            std::array<uint32_t, 2> state = {0, 0};
+            state_t state = {0, 0};
             uint32_t num_executions = config_->num_executions;
+
+            field_action action;
 
             double rand = dist_r_0_to_1_(generator_);
             if(rand < config_->e_greedy)
-            {
-                auto random_action = field_action_list[dist_ui_0_to_4_(generator_)];
-            }
+                // Random action.
+                action = field_action_list[dist_ui_0_to_4_(generator_)];
+            else
+                // Get action that maximize Q(s, a).
+                action = config_->field->argmaxQ(state);
         }
     };
 }
