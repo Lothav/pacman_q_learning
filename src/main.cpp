@@ -33,10 +33,11 @@ int main(int argc, char* argv[])
     }
 
     auto params = std::make_unique<PacMaze::QLearningConfig>();
-    params->field          = PacMaze::FieldFactory::create(std::move(s), w, h);
-    params->learning_rate  = std::atof(argv[2]);
-    params->e_greedy       = std::atof(argv[3]);
-    params->num_executions = static_cast<uint32_t>(std::atoi(argv[4]));
+    params->field           = PacMaze::FieldFactory::create(std::move(s), w, h);
+    params->learning_rate   = std::atof(argv[2]);
+    params->e_greedy        = std::atof(argv[3]);
+    params->discount_factor = 0.9;
+    params->num_executions  = static_cast<uint32_t>(std::atoi(argv[4]));
 
     auto ql = std::make_unique<PacMaze::QLearning>(std::move(params));
     ql->train();

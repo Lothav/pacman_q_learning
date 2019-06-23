@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Field.hpp"
 #include <random>       /* time */
+#include <cmath>
 
 namespace PacMaze
 {
@@ -14,6 +15,7 @@ namespace PacMaze
         std::unique_ptr<Field>  field;
         double                  learning_rate;
         double                  e_greedy;
+        double                  discount_factor;
         uint32_t                num_executions;
     };
 
@@ -36,18 +38,31 @@ namespace PacMaze
 
         void train()
         {
-            state_t state = {0, 0};
+            state_t state = {1, 1};
             uint32_t num_executions = config_->num_executions;
 
-            field_action action;
+            while(num_executions--)
+            {
+                field_action action;
+                double rand = dist_r_0_to_1_(generator_);
+                if(rand < config_->e_greedy)
+                    // Random action.
+                    action = field_action_list[dist_ui_0_to_4_(generator_)];
+                else
+                    // Get action that maximize Q(s, a).
+                    action = config_->field->maxQ(state).first;
 
-            double rand = dist_r_0_to_1_(generator_);
-            if(rand < config_->e_greedy)
-                // Random action.
-                action = field_action_list[dist_ui_0_to_4_(generator_)];
-            else
-                // Get action that maximize Q(s, a).
-                action = config_->field->argmaxQ(state);
+                double old_q_val = config_->field->getQ(state, action);
+                state_t new_state = config_->field->getNewState(state, action);
+                double max_q_val = config_->field->maxQ(new_state).second;
+
+                auto new_q_val =
+                    old_q_val +
+                    config_->e_greedy *
+                    ((config_->field->getStateReward(new_state) + config_->discount_factor * max_q_val) - old_q_val);
+
+                config_->field->updateQ(state, action, new_q_val);
+            }
         }
     };
 }
