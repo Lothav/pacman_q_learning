@@ -85,7 +85,7 @@ namespace PacMaze
             for (uint j = 0; j < field_[i].size(); j++)
             {
                 auto field_cell = field_[i][j];
-                if(field_cell.type == WALL) continue;
+                if(field_cell.type != EMPTY_PATH) continue;
 
                 for (uint k = 0; k < field_action_list.size(); k++)
                 {
