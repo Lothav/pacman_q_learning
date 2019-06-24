@@ -66,21 +66,26 @@ namespace PacMaze
                         action = field_action_list[dist_ui_0_to_4_(generator_)];
                     else
                         // Get action that maximize Q(s, a).
-                        action = config_->field->maxQ(state).first;
+                        action = config_->field->getMaxQ(state).first;
 
-                    state_t new_state = config_->field->performAction(state, action);
-                    double max_q_val = config_->field->maxQ(new_state).second;
-                    int32_t state_reward = config_->field->getStateReward(new_state);
-
+                    // Retrieve Q val for current state/action Q(s, a)
                     double old_q_val = config_->field->getQ(state, action);
+                    // Perform action and get the new state
+                    state_t new_state = config_->field->performAction(state, action);
+                    // Calc argmax Q(s', a) val for the new state
+                    double max_q_val = config_->field->getMaxQ(new_state).second;
+                    // Get reward by performing action 'a'
+                    int32_t action_reward = config_->field->getStateReward(new_state);
 
+                    // Update Q(s, a) = Q(s, a) + alpha * (R(s, a) + y*max{Q(s', a')} - Q(s, a))
                     auto new_q_val =
-                        old_q_val + config_->learning_rate * ((state_reward + config_->discount_factor * max_q_val) - old_q_val);
-
+                        old_q_val + config_->learning_rate * ((action_reward + config_->discount_factor * max_q_val) - old_q_val);
                     config_->field->updateQ(state, action, new_q_val);
 
+                    // S = S'
                     state = new_state;
 
+                    // Check if new_state is the final state then break
                     if(config_->field->isFinalState(state))
                         break;
                 }

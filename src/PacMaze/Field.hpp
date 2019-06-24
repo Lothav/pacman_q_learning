@@ -101,7 +101,7 @@ namespace PacMaze
             return {static_cast<uint32_t>(field_.size()), static_cast<uint32_t>(field_[0].size())};
         }
 
-        std::pair<field_action, double> maxQ(const state_t& state)
+        std::pair<field_action, double> getMaxQ(const state_t &state)
         {
             field_action max_q_action = LEFT;
 
