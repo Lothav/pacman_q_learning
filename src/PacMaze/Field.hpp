@@ -47,27 +47,32 @@ namespace PacMaze
         explicit Field(field_t&& field) : field_(field)
         {}
 
-        bool isValidMove(const state_t& new_state_pos) const
+        bool isValidState(const state_t& state) const
         {
             // Check lower boundaries.
-            if(new_state_pos[0] < 0 || new_state_pos[1] < 0)
+            if(state[0] < 0 || state[1] < 0)
                 return false;
             // Check upper boundaries.
-            if(new_state_pos[0] > (field_.size() - 1) || new_state_pos[1] > (field_[0].size() - 1))
+            if(state[0] > (field_.size() - 1) || state[1] > (field_[0].size() - 1))
                 return false;
             // Check if it's a wall.
-            if(field_[new_state_pos[0]][new_state_pos[1]].type == WALL)
+            if(field_[state[0]][state[1]].type == WALL)
                 return false;
 
             // Valid move!
             return true;
         }
 
-        state_t getNewState(const state_t& state, field_action action) const
+        bool isEmptyState(const state_t& state) const
+        {
+            return field_[state[0]][state[1]].type == EMPTY_PATH;
+        }
+
+        state_t performAction(const state_t& state, field_action action) const
         {
             std::array<int, 2> movement = field_state_movement[action];
             state_t new_state = {state[0] + movement[0], state[1] + movement[1]};
-            return isValidMove(new_state) ? new_state : state;
+            return isValidState(new_state) ? new_state : state;
         }
 
         double getQ(const state_t& state, field_action action)
@@ -89,6 +94,11 @@ namespace PacMaze
         int32_t getStateReward(const state_t& state)
         {
             return field_[state[0]][state[1]].R;
+        }
+
+        std::array<uint32_t, 2> getFieldSize()
+        {
+            return {static_cast<uint32_t>(field_.size()), static_cast<uint32_t>(field_[0].size())};
         }
 
         std::pair<field_action, double> maxQ(const state_t& state)

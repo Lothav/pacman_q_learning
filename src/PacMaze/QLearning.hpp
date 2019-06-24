@@ -42,7 +42,20 @@ namespace PacMaze
 
             while(num_executions--)
             {
-                state_t state = {1, 1};
+                state_t state;
+
+                // Randomize an initial state
+                while(true)
+                {
+                    auto i = dist_r_0_to_1_(generator_);
+                    auto j = dist_r_0_to_1_(generator_);
+
+                    auto field_size = config_->field->getFieldSize();
+                    state = {static_cast<uint32_t>(field_size[0] * i), static_cast<uint32_t>(field_size[1] * j)};
+
+                    if(config_->field->isValidState(state) && config_->field->isEmptyState(state))
+                        break;
+                }
 
                 while(true)
                 {
@@ -55,7 +68,7 @@ namespace PacMaze
                         // Get action that maximize Q(s, a).
                         action = config_->field->maxQ(state).first;
 
-                    state_t new_state = config_->field->getNewState(state, action);
+                    state_t new_state = config_->field->performAction(state, action);
                     double max_q_val = config_->field->maxQ(new_state).second;
                     int32_t state_reward = config_->field->getStateReward(new_state);
 
