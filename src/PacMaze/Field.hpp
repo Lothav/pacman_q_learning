@@ -55,8 +55,8 @@ namespace PacMaze
         int32_t getStateReward(const state_t& state);
         std::array<uint32_t, 2> getFieldSize();
         std::pair<field_action, double> getMaxQ(const state_t &state);
-        void printQ() const;
-        void printPolicy();
+        std::string getStringQ() const;
+        std::string getStringPolicy();
     };
 }
 

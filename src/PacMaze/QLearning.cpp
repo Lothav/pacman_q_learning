@@ -63,7 +63,5 @@ namespace PacMaze
                     break;
             }
         }
-        config_->field->printQ();
-        config_->field->printPolicy();
     }
 }

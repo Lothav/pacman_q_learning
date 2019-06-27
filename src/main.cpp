@@ -39,8 +39,20 @@ int main(int argc, char* argv[])
     params->discount_factor = 0.9;
     params->num_executions  = static_cast<uint32_t>(std::atoi(argv[4]));
 
+    std::ofstream log_q;
+    log_q.open("q.txt");
+
+    std::ofstream log_policy;
+    log_policy.open("pi.txt");
+
     auto ql = std::make_unique<PacMaze::QLearning>(std::move(params));
     ql->train();
+
+    log_q << ql->getStringQ();
+    log_policy << ql->getStringPolicy();
+
+    log_q.close();
+    log_policy.close();
 
     return EXIT_SUCCESS;
 }

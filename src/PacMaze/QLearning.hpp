@@ -1,3 +1,5 @@
+#include <utility>
+
 
 #ifndef PACMAN_Q_LEARNING_QLEARNING_HPP
 #define PACMAN_Q_LEARNING_QLEARNING_HPP
@@ -7,6 +9,7 @@
 #include "Field.hpp"
 #include <random>       /* time */
 #include <cmath>
+#include <fstream>
 
 namespace PacMaze
 {
@@ -32,6 +35,17 @@ namespace PacMaze
 
         explicit QLearning(std::unique_ptr<QLearningConfig> config);
         void train();
+
+        std::string getStringQ()
+        {
+            return config_->field->getStringQ();
+        }
+
+        std::string getStringPolicy()
+        {
+            return config_->field->getStringPolicy();
+        }
+
     };
 }
 

@@ -1,3 +1,5 @@
+#include <fstream>
+#include <memory>
 #include "Field.hpp"
 
 namespace PacMaze
@@ -78,8 +80,10 @@ namespace PacMaze
         return {max_q_action, max_value};
     }
 
-    void Field::printQ() const
+    std::string Field::getStringQ() const
     {
+        std::stringstream s;
+
         for (uint i = 0; i < field_.size(); i++)
         {
             for (uint j = 0; j < field_[i].size(); j++)
@@ -95,15 +99,19 @@ namespace PacMaze
                     q_stream_format << field_cell.Q[field_action_list[k]];
 
                     auto prefix = std::array<char, 4>{'R', 'L', 'U', 'D'}[k];
-                    std::cout << std::to_string(i) << ',' << std::to_string(j) << ',';
-                    std::cout << prefix << ',' << q_stream_format.str() << std::endl;
+                    s << std::to_string(i) << ',' << std::to_string(j) << ',';
+                    s << prefix << ',' << q_stream_format.str() << std::endl;
                 }
             }
         }
+
+        return s.str();
     }
 
-    void Field::printPolicy()
+    std::string Field::getStringPolicy()
     {
+        std::stringstream s;
+
         for (uint i = 0; i < field_.size(); i++)
         {
             for (uint j = 0; j < field_[i].size(); j++)
@@ -113,14 +121,16 @@ namespace PacMaze
                 if(cell.type == EMPTY_PATH)
                 {
                     auto max_q = this->getMaxQ({i, j});
-                    std::cout << static_cast<char>(max_q.first);
-                     continue;
+                    s << static_cast<char>(max_q.first);
+                    continue;
                 }
 
-                std::cout << static_cast<char>(cell.type) ; //std::to_string(cell.type);
+                s << static_cast<char>(cell.type);
             }
 
-            std::cout << std::endl;
+            s << std::endl;
         }
+
+        return s.str();
     }
 }
