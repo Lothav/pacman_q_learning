@@ -78,7 +78,7 @@ namespace PacMaze
         return {max_q_action, max_value};
     }
 
-    void Field::printQ()
+    void Field::printQ() const
     {
         for (uint i = 0; i < field_.size(); i++)
         {
@@ -99,6 +99,28 @@ namespace PacMaze
                     std::cout << prefix << ',' << q_stream_format.str() << std::endl;
                 }
             }
+        }
+    }
+
+    void Field::printPolicy()
+    {
+        for (uint i = 0; i < field_.size(); i++)
+        {
+            for (uint j = 0; j < field_[i].size(); j++)
+            {
+                auto cell = field_[i][j];
+
+                if(cell.type == EMPTY_PATH)
+                {
+                    auto max_q = this->getMaxQ({i, j});
+                    std::cout << static_cast<char>(max_q.first);
+                     continue;
+                }
+
+                std::cout << static_cast<char>(cell.type) ; //std::to_string(cell.type);
+            }
+
+            std::cout << std::endl;
         }
     }
 }

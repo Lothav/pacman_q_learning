@@ -11,7 +11,7 @@
 
 namespace PacMaze
 {
-    enum field_action { UP, DOWN, LEFT, RIGHT };
+    enum field_action { UP = 'U', DOWN = 'D', LEFT = 'L', RIGHT = 'R'};
 
     enum field_cell_type
     {
@@ -55,7 +55,8 @@ namespace PacMaze
         int32_t getStateReward(const state_t& state);
         std::array<uint32_t, 2> getFieldSize();
         std::pair<field_action, double> getMaxQ(const state_t &state);
-        void printQ();
+        void printQ() const;
+        void printPolicy();
     };
 }
 
