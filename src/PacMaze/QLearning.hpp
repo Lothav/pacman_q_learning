@@ -53,7 +53,6 @@ namespace PacMaze
          */
         std::string getStringQ() const;
         std::string getStringPolicy() const;
-
     };
 }
 

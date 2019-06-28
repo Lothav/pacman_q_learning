@@ -5,8 +5,8 @@ namespace PacMaze
     QLearning::QLearning(std::unique_ptr<QLearningConfig> config) : config_ (std::move(config))
     {
         std::random_device rd;
-        generator_ = std::default_random_engine(rd());
-        dist_r_0_to_1_ = std::uniform_real_distribution<double>(0.0, 1.0);
+        generator_      = std::default_random_engine(rd());
+        dist_r_0_to_1_  = std::uniform_real_distribution<double>(0.0, 1.0);
         dist_ui_0_to_4_ = std::uniform_int_distribution<int>(0, 3);
     }
 
@@ -14,23 +14,28 @@ namespace PacMaze
     {
         uint32_t num_executions = config_->num_executions;
 
-        while (num_executions--) {
+        // Execute train 'config_->num_executions' times.
+        while (num_executions--)
+        {
             state_t state;
 
             // Randomize an initial state
-            while (true) {
+            while (true)
+            {
                 auto i = dist_r_0_to_1_(generator_);
                 auto j = dist_r_0_to_1_(generator_);
 
                 // Generate random numbers...
                 auto field_size = config_->field->getFieldSize();
-                state = {static_cast<uint32_t>(field_size[0] * i), static_cast<uint32_t>(field_size[1] * j)};
+                state = { static_cast<uint32_t>(field_size[0] * i), static_cast<uint32_t>(field_size[1] * j) };
                 // ... until we get an valid and empty state.
                 if (config_->field->isValidState(state) && config_->field->isEmptyState(state))
                     break;
             }
 
-            while (true) {
+            // Iterate until found an final state.
+            while (true)
+            {
                 field_action action;
                 double rand = dist_r_0_to_1_(generator_);
                 if (rand < config_->e_greedy)
@@ -55,7 +60,7 @@ namespace PacMaze
                     config_->learning_rate * ((action_reward + config_->discount_factor * max_q_val) - old_q_val);
                 config_->field->updateQ(state, action, new_q_val);
 
-                // S = S'
+                // Update state: S = S'
                 state = new_state;
 
                 // Check if new_state is the final state then break

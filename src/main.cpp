@@ -7,7 +7,8 @@
 
 int main(int argc, char* argv[])
 {
-    if(argc != 5) {
+    if(argc != 5)
+    {
         std::cerr << "Invalid number of arguments!" << std::endl;
         std::cerr << "Arguments must be <input-file> <learning-rate> <e-greedy> <num-executions>" << std::endl;
         return EXIT_FAILURE;
