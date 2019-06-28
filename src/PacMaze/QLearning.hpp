@@ -25,8 +25,15 @@ namespace PacMaze
     class QLearning
     {
     private:
+
+        /**
+         * Q learning config data
+         */
         std::unique_ptr<QLearningConfig>        config_;
 
+        /**
+         * Random generation data
+         */
         std::default_random_engine              generator_;
         std::uniform_real_distribution<double>  dist_r_0_to_1_;
         std::uniform_int_distribution<int>      dist_ui_0_to_4_;
@@ -34,17 +41,18 @@ namespace PacMaze
     public:
 
         explicit QLearning(std::unique_ptr<QLearningConfig> config);
+
+        /**
+         * Perform a training using given parameters.
+         */
         void train();
 
-        std::string getStringQ()
-        {
-            return config_->field->getStringQ();
-        }
-
-        std::string getStringPolicy()
-        {
-            return config_->field->getStringPolicy();
-        }
+        /**
+         * toString() matrices functions.
+         * @return string
+         */
+        std::string getStringQ() const;
+        std::string getStringPolicy() const;
 
     };
 }

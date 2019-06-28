@@ -64,4 +64,14 @@ namespace PacMaze
             }
         }
     }
+
+    std::string QLearning::getStringQ() const
+    {
+        return config_->field->getStringQ();
+    }
+
+    std::string QLearning::getStringPolicy() const
+    {
+        return config_->field->getStringPolicy();
+    }
 }
